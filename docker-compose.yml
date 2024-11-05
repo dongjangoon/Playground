@@ -1,0 +1,17 @@
+services:
+  mongodb:
+    image: mongo:8.0-rc
+    container_name: mongodb-nickname
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  redis:
+    image: redis:7.4-rc-alpine
+    container_name: redis-nickname
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongodb_data:

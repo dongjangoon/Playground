@@ -1,0 +1,9 @@
+FROM openjdk:21-jdk-slim as builder
+WORKDIR /app
+COPY . .
+RUN ./gradlew :batch:clean :batch:build -x test
+
+FROM openjdk:21-jdk-slim
+WORKDIR /app
+COPY --from=builder /app/batch/build/libs/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "nickname-batch.jar"]

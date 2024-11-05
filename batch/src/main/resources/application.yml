@@ -1,0 +1,29 @@
+spring:
+  config:
+    import: application-common.yml
+  jpa:
+    show-sql: true
+  batch:
+    jdbc:
+      initialize-schema: always # Spring Batch 테이블 자동 생성
+    job:
+      name: ${job.name:EMPTY}
+      enabled: true
+  main:
+    web-application-type: none
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+spring:
+  config:
+    activate:
+      on-profile: prod

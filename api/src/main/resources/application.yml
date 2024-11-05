@@ -1,0 +1,19 @@
+spring:
+  config:
+    import: application-common.yml
+  jackson:
+    default-property-inclusion: non_null
+server:
+  netty:
+    idle-timeout: 5s
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
