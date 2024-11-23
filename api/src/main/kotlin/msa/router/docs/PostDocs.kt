@@ -20,147 +20,155 @@ import org.springframework.web.bind.annotation.RequestMethod
         path = "/v1/api/posts",
         method = [RequestMethod.POST],
         produces = [MediaType.APPLICATION_JSON_VALUE],
-        operation = Operation(
-            operationId = "createPost",
-            requestBody = RequestBody(
-                content = [
-                    Content(
-                        schema = Schema(implementation = CreatePostRequest::class),
-                        mediaType = MediaType.APPLICATION_JSON_VALUE
-                    )
-                ]
+        operation =
+            Operation(
+                operationId = "createPost",
+                requestBody =
+                    RequestBody(
+                        content = [
+                            Content(
+                                schema = Schema(implementation = CreatePostRequest::class),
+                                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            ),
+                        ],
+                    ),
+                responses = [
+                    ApiResponse(
+                        responseCode = "200",
+                        content = [Content(schema = Schema(implementation = PostResponse::class))],
+                    ),
+                ],
             ),
-            responses = [
-                ApiResponse(
-                    responseCode = "200",
-                    content = [Content(schema = Schema(implementation = PostResponse::class))]
-                )
-            ]
-        )
     ),
     RouterOperation(
         path = "/v1/posts/{id}",
         method = [RequestMethod.PUT],
         produces = [MediaType.APPLICATION_JSON_VALUE],
-        operation = Operation(
-            operationId = "updatePost",
-            parameters = [
-                Parameter(
-                    `in` = ParameterIn.PATH,
-                    name = "id",
-                    required = true,
-                    schema = Schema(type = "string")
-                )
-             ],
-            requestBody = RequestBody(
-                content = [
-                    Content(
-                        schema = Schema(implementation = UpdatePostRequest::class),
-                        mediaType = MediaType.APPLICATION_JSON_VALUE
-                    )
-                ]
+        operation =
+            Operation(
+                operationId = "updatePost",
+                parameters = [
+                    Parameter(
+                        `in` = ParameterIn.PATH,
+                        name = "id",
+                        required = true,
+                        schema = Schema(type = "string"),
+                    ),
+                ],
+                requestBody =
+                    RequestBody(
+                        content = [
+                            Content(
+                                schema = Schema(implementation = UpdatePostRequest::class),
+                                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            ),
+                        ],
+                    ),
+                responses = [
+                    ApiResponse(
+                        responseCode = "200",
+                        content = [Content(schema = Schema(implementation = PostResponse::class))],
+                    ),
+                ],
             ),
-            responses = [
-                ApiResponse(
-                    responseCode = "200",
-                    content = [Content(schema = Schema(implementation = PostResponse::class))]
-                )
-            ]
-        )
     ),
     RouterOperation(
         path = "/v1/api/posts/{id}/publish",
         method = [RequestMethod.PATCH],
         produces = [MediaType.APPLICATION_JSON_VALUE],
-        operation = Operation(
-            operationId = "publishPost",
-            parameters = [
-                Parameter(
-                    `in` = ParameterIn.PATH,
-                    name = "id",
-                    required = true,
-                    schema = Schema(type = "string")
-                )
-             ],
-            responses = [
-                ApiResponse(
-                    responseCode = "200",
-                    content = [Content(schema = Schema(implementation = PostResponse::class))]
-                )
-            ]
-        )
+        operation =
+            Operation(
+                operationId = "publishPost",
+                parameters = [
+                    Parameter(
+                        `in` = ParameterIn.PATH,
+                        name = "id",
+                        required = true,
+                        schema = Schema(type = "string"),
+                    ),
+                ],
+                responses = [
+                    ApiResponse(
+                        responseCode = "200",
+                        content = [Content(schema = Schema(implementation = PostResponse::class))],
+                    ),
+                ],
+            ),
     ),
     RouterOperation(
         path = "/v1/api/posts/{id}",
         method = [RequestMethod.GET],
         produces = [MediaType.APPLICATION_JSON_VALUE],
-        operation = Operation(
-            operationId = "getPost",
-            parameters = [
-                Parameter(
-                    `in` = ParameterIn.PATH,
-                    name = "id",
-                    required = true,
-                    schema = Schema(type = "string")
-                )
-            ],
-            responses = [
-                ApiResponse(
-                    responseCode = "200",
-                    content = [Content(schema = Schema(implementation = PostResponse::class))]
-                )
-            ]
-        )
+        operation =
+            Operation(
+                operationId = "getPost",
+                parameters = [
+                    Parameter(
+                        `in` = ParameterIn.PATH,
+                        name = "id",
+                        required = true,
+                        schema = Schema(type = "string"),
+                    ),
+                ],
+                responses = [
+                    ApiResponse(
+                        responseCode = "200",
+                        content = [Content(schema = Schema(implementation = PostResponse::class))],
+                    ),
+                ],
+            ),
     ),
     RouterOperation(
         path = "/v1/api/posts",
         method = [RequestMethod.GET],
         produces = [MediaType.APPLICATION_JSON_VALUE],
-        operation = Operation(
-            operationId = "getPosts",
-            parameters = [
-                Parameter(
-                    `in` = ParameterIn.QUERY,
-                    name = "category",
-                    required = false,
-                    schema = Schema(type = "string", example = "BACKEND")
-                ),
-                Parameter(
-                    `in` = ParameterIn.QUERY,
-                    name = "status",
-                    required = false,
-                    schema = Schema(type = "string", example = "PUBLISHED")
-                )
-            ],
-            responses = [
-                ApiResponse(
-                    responseCode = "200",
-                    content = [Content(schema = Schema(implementation = PostResponse::class))]
-                )
-            ]
-        )
+        operation =
+            Operation(
+                operationId = "getPosts",
+                parameters = [
+                    Parameter(
+                        `in` = ParameterIn.QUERY,
+                        name = "category",
+                        required = false,
+                        schema = Schema(type = "string", example = "BACKEND"),
+                    ),
+                    Parameter(
+                        `in` = ParameterIn.QUERY,
+                        name = "status",
+                        required = false,
+                        schema = Schema(type = "string", example = "PUBLISHED"),
+                    ),
+                ],
+                responses = [
+                    ApiResponse(
+                        responseCode = "200",
+                        content = [Content(schema = Schema(implementation = PostResponse::class))],
+                    ),
+                ],
+            ),
     ),
     RouterOperation(
         path = "/v1/api/posts/author/{authorId}",
         method = [RequestMethod.GET],
         produces = [MediaType.APPLICATION_JSON_VALUE],
-        operation = Operation(
-            operationId = "getPostsByAuthor",
-            parameters = [
-                Parameter(
-                    `in` = ParameterIn.PATH,
-                    name = "authorId",
-                    required = true,
-                    schema = Schema(type = "string")
-                )
-            ],
-            responses = [
-                ApiResponse(
-                    responseCode = "200",
-                    content = [Content(schema = Schema(implementation = Array<PostResponse>::class))]
-                )
-            ]
-        )
+        operation =
+            Operation(
+                operationId = "getPostsByAuthor",
+                parameters = [
+                    Parameter(
+                        `in` = ParameterIn.PATH,
+                        name = "authorId",
+                        required = true,
+                        schema = Schema(type = "string"),
+                    ),
+                ],
+                responses = [
+                    ApiResponse(
+                        responseCode = "200",
+                        content = [Content(schema = Schema(implementation = Array<PostResponse>::class))],
+                    ),
+                ],
+            ),
     ),
 )
 annotation class PostDocs

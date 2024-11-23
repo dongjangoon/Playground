@@ -20,14 +20,15 @@ class PostHandler(
 ) {
     suspend fun createPost(request: ServerRequest): ServerResponse {
         val body = request.awaitBody<CreatePostRequest>()
-        val post = postService.createPost(
-            body.title,
-            body.content,
-            body.summary,
-            body.category,
-            body.authorId,
-            body.tags
-        )
+        val post =
+            postService.createPost(
+                body.title,
+                body.content,
+                body.summary,
+                body.category,
+                body.authorId,
+                body.tags,
+            )
 
         return ServerResponse.ok()
             .contentType(MediaType.APPLICATION_JSON)
@@ -37,14 +38,15 @@ class PostHandler(
     suspend fun updatePost(request: ServerRequest): ServerResponse {
         val id = request.pathVariable("id")
         val body = request.awaitBody<UpdatePostRequest>()
-        val post = postService.updatePost(
-            id,
-            body.title,
-            body.content,
-            body.summary,
-            body.category,
-            body.tags
-        )
+        val post =
+            postService.updatePost(
+                id,
+                body.title,
+                body.content,
+                body.summary,
+                body.category,
+                body.tags,
+            )
 
         return ServerResponse.ok()
             .contentType(MediaType.APPLICATION_JSON)
@@ -70,12 +72,14 @@ class PostHandler(
     }
 
     suspend fun getPosts(request: ServerRequest): ServerResponse {
-        val category = request.queryParamOrNull("category")?.let {
-            PostCategory.valueOf(it.uppercase())
-        }
-        val status = request.queryParamOrNull("status")?.let {
-            PostStatus.valueOf(it.uppercase())
-        }
+        val category =
+            request.queryParamOrNull("category")?.let {
+                PostCategory.valueOf(it.uppercase())
+            }
+        val status =
+            request.queryParamOrNull("status")?.let {
+                PostStatus.valueOf(it.uppercase())
+            }
 
         val posts = postService.getPosts(category, status)
         return ServerResponse.ok()

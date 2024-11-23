@@ -17,7 +17,7 @@ interface PostService {
         summary: String,
         category: PostCategory,
         authorId: String,
-        tags: List<String>
+        tags: List<String>,
     ): Post
 
     suspend fun updatePost(
@@ -26,21 +26,24 @@ interface PostService {
         content: String?,
         summary: String?,
         category: PostCategory?,
-        tags: List<String>?
+        tags: List<String>?,
     ): Post
 
     suspend fun publishPost(id: String): Post
 
     suspend fun getPost(id: String): Post
 
-    suspend fun getPosts(category: PostCategory?, status: PostStatus?): List<Post>
+    suspend fun getPosts(
+        category: PostCategory?,
+        status: PostStatus?,
+    ): List<Post>
 
     suspend fun getPostsByAuthorId(authorId: String): List<Post>
 }
 
 @Service
 class PostServiceImpl(
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
 ) : PostService {
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -50,10 +53,10 @@ class PostServiceImpl(
         summary: String,
         category: PostCategory,
         authorId: String,
-        tags: List<String>
-    ): Post = Post.create(title, content, summary, category, authorId, tags)
+        tags: List<String>,
+    ): Post =
+        Post.create(title, content, summary, category, authorId, tags)
             .let { postRepository.save(it) }
-
 
     override suspend fun updatePost(
         id: String,
@@ -61,8 +64,9 @@ class PostServiceImpl(
         content: String?,
         summary: String?,
         category: PostCategory?,
-        tags: List<String>?
-    ): Post = postRepository.findById(id)
+        tags: List<String>?,
+    ): Post =
+        postRepository.findById(id)
             ?.let { post ->
                 postRepository.save(
                     post.copy(
@@ -71,8 +75,8 @@ class PostServiceImpl(
                         summary = summary ?: post.summary,
                         category = category ?: post.category,
                         tags = tags ?: post.tags,
-                        updatedAt = LocalDateTime.now()
-                    )
+                        updatedAt = LocalDateTime.now(),
+                    ),
                 )
             } ?: throw PostNotFoundException
 
@@ -81,15 +85,17 @@ class PostServiceImpl(
             postRepository.save(
                 post.copy(
                     status = PostStatus.PUBLISHED,
-                    updatedAt = LocalDateTime.now()
-                )
+                    updatedAt = LocalDateTime.now(),
+                ),
             )
         } ?: throw PostNotFoundException
 
-    override suspend fun getPost(id: String): Post =
-        postRepository.findById(id) ?: throw PostNotFoundException
+    override suspend fun getPost(id: String): Post = postRepository.findById(id) ?: throw PostNotFoundException
 
-    override suspend fun getPosts(category: PostCategory?, status: PostStatus?): List<Post> =
+    override suspend fun getPosts(
+        category: PostCategory?,
+        status: PostStatus?,
+    ): List<Post> =
         when {
             category != null && status != null -> postRepository.findByCategoryAndStatus(category, status)
             category != null -> postRepository.findByCategory(category)
@@ -97,6 +103,5 @@ class PostServiceImpl(
             else -> postRepository.findAll().toList()
         }
 
-    override suspend fun getPostsByAuthorId(authorId: String): List<Post> =
-        postRepository.findByAuthorId(authorId)
+    override suspend fun getPostsByAuthorId(authorId: String): List<Post> = postRepository.findByAuthorId(authorId)
 }

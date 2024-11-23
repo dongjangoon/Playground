@@ -15,18 +15,19 @@ data class PostResponse(
     val tags: List<String>,
     val status: PostStatus,
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val updatedAt: LocalDateTime,
 )
 
-fun Post.toResponse() = PostResponse(
-    id = id!!,
-    title = title,
-    content = content,
-    summary = summary,
-    category = category,
-    authorId = authorId,
-    tags = tags,
-    status = status,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-)
+fun Post.toResponse() =
+    PostResponse(
+        id = id!!,
+        title = title,
+        content = content,
+        summary = summary,
+        category = category,
+        authorId = authorId,
+        tags = tags,
+        status = status,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+    )

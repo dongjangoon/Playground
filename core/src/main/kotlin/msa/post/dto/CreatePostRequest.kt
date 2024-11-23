@@ -8,5 +8,5 @@ data class CreatePostRequest(
     val summary: String,
     val category: PostCategory,
     val authorId: String,
-    val tags: List<String>
+    val tags: List<String>,
 )

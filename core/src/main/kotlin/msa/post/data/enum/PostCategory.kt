@@ -7,7 +7,8 @@ enum class PostCategory {
     DEVOPS,
     ARCHITECTURE,
     CAREER,
-    NEWS;
+    NEWS,
+    ;
 
     companion object {
         fun fromString(value: String): PostCategory {

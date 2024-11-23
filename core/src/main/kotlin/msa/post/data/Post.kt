@@ -11,10 +11,8 @@ import java.time.LocalDateTime
 data class Post(
     @Id
     val id: String? = null,
-
     @Indexed
     val title: String,
-
     val content: String,
     val summary: String,
     val category: PostCategory,
@@ -22,7 +20,7 @@ data class Post(
     val tags: List<String>,
     val status: PostStatus,
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val updatedAt: LocalDateTime,
 ) {
     companion object {
         fun create(

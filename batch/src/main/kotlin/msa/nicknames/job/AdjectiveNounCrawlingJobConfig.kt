@@ -1,4 +1,3 @@
 package msa.nicknames.job
 
-class AdjectiveNounCrawlingJobConfig {
-}
+class AdjectiveNounCrawlingJobConfig

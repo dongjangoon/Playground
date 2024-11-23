@@ -7,5 +7,5 @@ data class UpdatePostRequest(
     val content: String?,
     val summary: String?,
     val category: PostCategory?,
-    val tags: List<String>?
+    val tags: List<String>?,
 )
