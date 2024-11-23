@@ -12,3 +12,5 @@ object NicknameNotFoundException : NicknameException(ErrorType.NICKNAME_NOT_FOUN
 object NoUnusedNicknameAvailableException : NicknameException(ErrorType.NO_UNUSED_NICKNAME_AVAILABLE)
 
 object NicknameAlreadyExistsException : NicknameException(ErrorType.NICKNAME_ALREADY_EXISTS)
+
+object PostNotFoundException : NicknameException(ErrorType.POST_NOT_FOUND)
