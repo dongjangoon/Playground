@@ -1,7 +1,9 @@
 package msa.router
 
+import msa.handler.CommentHandler
 import msa.handler.NicknameHandler
 import msa.handler.PostHandler
+import msa.router.docs.CommentDocs
 import msa.router.docs.PostDocs
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
@@ -14,6 +16,7 @@ import org.springframework.web.reactive.function.server.coRouter
 class MainRouter(
     private val nicknameHandler: NicknameHandler,
     private val postHandler: PostHandler,
+    private val commentHandler: CommentHandler,
 ) {
     @Bean
     fun healthCheck() =
@@ -43,6 +46,21 @@ class MainRouter(
                 GET("/{id}", postHandler::getPost)
                 GET("", postHandler::getPosts)
                 GET("/author/{authorId}", postHandler::getPostsByAuthor)
+            }
+        }
+
+    @Bean
+    @CommentDocs
+    fun commentRoute() =
+        v1CoRouter {
+            "/comments".nest {
+                POST("", commentHandler::createComment)
+                PUT("/{id}", commentHandler::updateComment)
+                DELETE("/{id}", commentHandler::deleteComment)
+                GET("/{id}", commentHandler::getComment)
+                GET("/post/{postId}", commentHandler::getCommentsByPost)
+                GET("/author/{authorId}", commentHandler::getCommentsByAuthor)
+                GET("/replies/{parentId}", commentHandler::getReplies)
             }
         }
 

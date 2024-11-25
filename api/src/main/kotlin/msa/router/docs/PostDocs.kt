@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod
         produces = [MediaType.APPLICATION_JSON_VALUE],
         operation =
             Operation(
+                tags = ["Post"],
                 operationId = "createPost",
                 requestBody =
                     RequestBody(
@@ -41,11 +42,12 @@ import org.springframework.web.bind.annotation.RequestMethod
             ),
     ),
     RouterOperation(
-        path = "/v1/posts/{id}",
+        path = "/v1/api/posts/{id}",
         method = [RequestMethod.PUT],
         produces = [MediaType.APPLICATION_JSON_VALUE],
         operation =
             Operation(
+                tags = ["Post"],
                 operationId = "updatePost",
                 parameters = [
                     Parameter(
@@ -78,6 +80,7 @@ import org.springframework.web.bind.annotation.RequestMethod
         produces = [MediaType.APPLICATION_JSON_VALUE],
         operation =
             Operation(
+                tags = ["Post"],
                 operationId = "publishPost",
                 parameters = [
                     Parameter(
@@ -101,6 +104,7 @@ import org.springframework.web.bind.annotation.RequestMethod
         produces = [MediaType.APPLICATION_JSON_VALUE],
         operation =
             Operation(
+                tags = ["Post"],
                 operationId = "getPost",
                 parameters = [
                     Parameter(
@@ -124,6 +128,7 @@ import org.springframework.web.bind.annotation.RequestMethod
         produces = [MediaType.APPLICATION_JSON_VALUE],
         operation =
             Operation(
+                tags = ["Post"],
                 operationId = "getPosts",
                 parameters = [
                     Parameter(
@@ -153,6 +158,7 @@ import org.springframework.web.bind.annotation.RequestMethod
         produces = [MediaType.APPLICATION_JSON_VALUE],
         operation =
             Operation(
+                tags = ["Post"],
                 operationId = "getPostsByAuthor",
                 parameters = [
                     Parameter(
