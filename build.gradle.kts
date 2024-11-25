@@ -45,11 +45,11 @@ subprojects {
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib")
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
         implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+
+        implementation("io.netty:netty-resolver-dns-native-macos:4.1.110.Final:osx-aarch_64")
 
         // API Documentation
         implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0")
