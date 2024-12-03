@@ -38,3 +38,6 @@ out/
 
 ### 설정파일
 application.yml
+application-test.yml
+application.properties
+application-test.properties
