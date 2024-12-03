@@ -14,9 +14,6 @@ public class GatewayConfig {
     @Value("${test.api.path}")
     private String apiPath;
 
-//    @Value("${spring.another.service.uri}")
-//    private String anotherServiceUri;
-
     /**
      * API 라우팅
      * /api/**로 들어오는 요청을 8080포트 application 으로 전달.
@@ -29,32 +26,4 @@ public class GatewayConfig {
                         .uri("http://localhost:8080"))
                 .build();
     }
-
-
-    /**
-     * 경로 필터 추가
-     * /service/** 경로를 처리하며, 경로를 변경한 후 대상 서비스로 요청 전달.
-     */
-//    @Bean
-//    public RouteLocator rewritePathRoute(RouteLocatorBuilder builder) {
-//        return builder.routes()
-//                .route("rewrite-path-route", r -> r.path("/service/**")
-//                        .filters(f -> f.rewritePath("/service/(?<segment>.*)", "/${segment}"))
-//                        .uri(anotherServiceUri))
-//                .build();
-//    }
-
-    /**
-     * 요청 헤더 추가
-     * 특정 경로로 들어오는 요청에 Authorization 헤더를 추가.
-     */
-//    @Bean
-//    public RouteLocator addHeaderRoute(RouteLocatorBuilder builder) {
-//        return builder.routes()
-//                .route("add-header-route", r -> r.path("/secure/**")
-//                        .filters(f -> f.addRequestHeader("Authorization", "Bearer my_secure_token"))
-//                        .uri(anotherServiceUri))
-//                .build();
-//    }
-
 }

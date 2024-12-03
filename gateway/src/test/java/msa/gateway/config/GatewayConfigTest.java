@@ -2,9 +2,11 @@ package msa.gateway.config;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.nio.charset.StandardCharsets;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class GatewayConfigTest {
@@ -24,42 +26,39 @@ class GatewayConfigTest {
     }
 
     /**
-     * 테스트 2: 필터가 동작하여 경로가 변경되는지 확인
+     * 테스트 2: Post 요청 확인
      */
-    /*
     @Test
-    void testPathRewrite() {
-        webTestClient.get()
-                .uri("/service/some-path") // Gateway에 요청
-                .exchange() // 요청 실행
-                .expectStatus().isOk() // HTTP 상태 코드 200 확인
-                .expectBody(String.class)
-                .consumeWith(response -> {
-                    String body = response.getResponseBody();
-                    System.out.println("Response: " + body);
-                    // 대상 서비스에서 경로가 변경된 후의 응답 확인
-                    assert body != null && body.contains("Rewritten Path Successful");
-                });
-    }
-    */
+    void testCreateComment() {
+        String requestBody = """
+        {
+          "postId": "12345",
+          "content": "This is a sample comment",
+          "authorId": "user-6789",
+          "parentId": null
+        }
+        """;
 
-    /**
-     * 테스트 3: 요청 헤더가 추가되었는지 확인
-     */
-    /*
-    @Test
-    void testRequestHeaderAddition() {
-        webTestClient.get()
-                .uri("/secure/test") // Gateway로 요청
+        webTestClient.post()
+                .uri("/api/comments") // 요청 경로
+                .contentType(MediaType.APPLICATION_JSON) // 요청 Content-Type 설정
+                .bodyValue(requestBody) // 요청 본문 설정
                 .exchange() // 요청 실행
-                .expectStatus().isOk() // HTTP 상태 코드 200 확인
-                .expectBody(String.class)
+                .expectStatus().isOk() // HTTP 상태 200 확인
+                .expectBody()
                 .consumeWith(response -> {
-                    String body = response.getResponseBody();
-                    System.out.println("Response: " + body);
-                    // 대상 서비스가 추가된 헤더를 인식했는지 확인
-                    assert body != null && body.contains("Authorization Header Processed");
+                    String responseBody = new String(response.getResponseBody(), StandardCharsets.UTF_8); // 응답 본문 디코딩
+                    System.out.println("Full Response Body: " + responseBody); // 전체 응답 출력
                 });
+//                .jsonPath("$.id").exists() // ID가 반환되는지 확인
+//                .jsonPath("$.postId").isEqualTo("12345")
+//                .jsonPath("$.content").isEqualTo("This is a sample comment") // JSON 필드 검증
+//                .jsonPath("$.authorId").isEqualTo("user-6789")
+//                .jsonPath("$.parentId").isEmpty()
+//                .jsonPath("$.createdAt").exists() // 생성 시간 확인
+//                .jsonPath("$.updatedAt").exists(); // 업데이트 시간 확인
+
     }
-    */
+
+
 }
