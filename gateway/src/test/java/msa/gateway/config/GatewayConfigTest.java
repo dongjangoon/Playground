@@ -7,7 +7,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class GatewayIntegrationTest {
+class GatewayConfigTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -18,7 +18,7 @@ class GatewayIntegrationTest {
     @Test
     void testApiRoute() {
         webTestClient.get()
-                .uri("/health-check") // Gateway로 요청을 보냄
+                .uri("/api/health-check") // Gateway로 요청을 보냄
                 .exchange() // 요청 실행
                 .expectStatus().isOk(); // HTTP 상태 코드 200 확인
     }

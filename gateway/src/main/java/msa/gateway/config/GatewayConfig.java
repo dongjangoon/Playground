@@ -18,16 +18,18 @@ public class GatewayConfig {
 //    private String anotherServiceUri;
 
     /**
-     * 기본 API 경로 라우팅
-     * /api/**로 들어오는 요청을 entrypointApiPath로 전달.
+     * API 라우팅
+     * /api/**로 들어오는 요청을 8080포트 application 으로 전달.
      */
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("api-route", r -> r.path("/health-check").uri(apiPath
-                ))
+                .route("api-route", r -> r.path("/api/**")
+                        .filters(f -> f.rewritePath("/api/(?<segment>.*)", "/${segment}"))
+                        .uri("http://localhost:8080"))
                 .build();
     }
+
 
     /**
      * 경로 필터 추가
