@@ -1,6 +1,7 @@
 package msa.gateway.config;
 
 import lombok.Getter;
+import msa.gateway.filter.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -10,6 +11,12 @@ import org.springframework.beans.factory.annotation.Value;
 @Getter
 @Configuration
 public class GatewayConfig {
+
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
+
+    public GatewayConfig(JwtAuthorizationFilter jwtAuthorizationFilter) {
+        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
+    }
 
     @Value("${test.api.path}")
     private String apiPath;
