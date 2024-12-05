@@ -9,6 +9,7 @@ import msa.gateway.filter.JwtAuthorizationFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
@@ -20,21 +21,28 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // WebFluxTest 에서는 에러 발생
 @Import({GatewayConfig.class, JwtAuthorizationFilter.class, JwtUtil.class}) // 테스트 대상 구성 및 필터
 public class GatewayFilterTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
+    // 빈 주입에서 에러가 발생하는 코드
+//    @Autowired
+//    private JwtUtil jwtUtil;
+//
+//    private final SecretKey secretKey = Keys.hmacShaKeyFor(jwtUtil.getSecretKey().getBytes(StandardCharsets.UTF_8));
+
+    // 정상적으로 동작하는 코드
     @Autowired
     private JwtUtil jwtUtil;
 
     private SecretKey secretKey;
 
     @BeforeEach
-    public void setup() {
-        // SecretKey를 jwtUtil에서 가져온 값으로 초기화
+    void setup() {
+        // jwtUtil 주입 이후 secretKey 초기화
         secretKey = Keys.hmacShaKeyFor(jwtUtil.getSecretKey().getBytes(StandardCharsets.UTF_8));
     }
 
