@@ -3,15 +3,13 @@ package msa.gateway;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import msa.gateway.common.config.GatewayConfig;
+import jakarta.annotation.PostConstruct;
 import msa.gateway.common.utils.JwtUtil;
-import msa.gateway.filter.JwtAuthorizationFilter;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -21,29 +19,21 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // WebFluxTest 에서는 에러 발생
-@Import({GatewayConfig.class, JwtAuthorizationFilter.class, JwtUtil.class}) // 테스트 대상 구성 및 필터
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class GatewayFilterTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
-    // 빈 주입에서 에러가 발생하는 코드
-//    @Autowired
-//    private JwtUtil jwtUtil;
-//
-//    private final SecretKey secretKey = Keys.hmacShaKeyFor(jwtUtil.getSecretKey().getBytes(StandardCharsets.UTF_8));
-
-    // 정상적으로 동작하는 코드
     @Autowired
     private JwtUtil jwtUtil;
 
-    private SecretKey secretKey;
+    private SecretKey secretKey; // final 제거
 
-    @BeforeEach
-    void setup() {
-        // jwtUtil 주입 이후 secretKey 초기화
-        secretKey = Keys.hmacShaKeyFor(jwtUtil.getSecretKey().getBytes(StandardCharsets.UTF_8));
+    @PostConstruct
+    public void init() {
+        // 의존성 주입 이후에 secretKey 초기화
+        this.secretKey = Keys.hmacShaKeyFor(jwtUtil.getSecretKey().getBytes(StandardCharsets.UTF_8));
     }
 
     private String generateJwtToken(String email, String role) {
