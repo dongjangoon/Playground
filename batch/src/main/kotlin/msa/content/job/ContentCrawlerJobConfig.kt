@@ -30,8 +30,8 @@ class ContentCrawlerJobConfig(
     private companion object {
         const val JOB_NAME = "contentCrawlerJob"
         const val STEP_NAME = "contentCrawlerStep"
-        const val CONCURRENT_WORKERS = 10   // 동시에 처리할 크롤링 작업 수
-        const val CHANNEL_CAPACITY = 20    // 크롤링 요청을 담을 채널 크기
+        const val CONCURRENT_WORKERS = 10 // 동시에 처리할 크롤링 작업 수
+        const val CHANNEL_CAPACITY = 20 // 크롤링 요청을 담을 채널 크기
     }
 
     @Bean
@@ -55,7 +55,7 @@ class ContentCrawlerJobConfig(
                 val (processedCount, elapsedTime) = measureTimedValue { processSources() }
                 log.info(
                     "컨텐츠 크롤링 작업이 완료되었습니다. 총 ${processedCount}개의 컨텐츠를 처리하였습니다. " +
-                    "(소요시간: ${elapsedTime.inWholeSeconds}초)",
+                        "(소요시간: ${elapsedTime.inWholeSeconds}초)",
                 )
                 RepeatStatus.FINISHED
             }, transactionManager)
@@ -80,7 +80,7 @@ class ContentCrawlerJobConfig(
 
             // 크롤링할 소스 URL들을 채널로 전송
             launch {
-                blogSourceProvider.getBlogSources().forEach { source ->
+                blogSourceProvider.getAllBlogSources().forEach { source ->
                     channel.send(source)
                 }
                 channel.close()

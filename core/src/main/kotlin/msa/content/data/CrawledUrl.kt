@@ -11,8 +11,8 @@ data class CrawledUrl(
     val id: String? = null,
     @Indexed(unique = true)
     val url: String,
-    val postId: String, // 크롤링으로 생성한 Post ID 참조
-
+    /** 크롤링으로 생성한 Post ID 참조 */
+    val postId: String,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
 ) {

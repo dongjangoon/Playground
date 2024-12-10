@@ -10,7 +10,7 @@ import java.net.URI
 
 @Service
 class RobotsValidator(
-    private val webClient: WebClient
+    private val webClient: WebClient,
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -25,7 +25,11 @@ class RobotsValidator(
      * @param userAgent 사용할 User-Agent 값
      * @return 크롤링 허용 여부
      */
-    suspend fun isAllowedToCrawl(baseUrl: String, path: String, userAgent: String): Boolean {
+    suspend fun isAllowedToCrawl(
+        baseUrl: String,
+        path: String,
+        userAgent: String,
+    ): Boolean {
         try {
             val robotsTxtUrl = URI(baseUrl).resolve(ROBOTS_PATH).toString()
             val robotsTxt = fetchRobotsTxt(robotsTxtUrl)
@@ -37,7 +41,11 @@ class RobotsValidator(
         }
     }
 
-    private fun parseRobotsTxt(robotsTxt: String, path: String, userAgent: String): Boolean {
+    private fun parseRobotsTxt(
+        robotsTxt: String,
+        path: String,
+        userAgent: String,
+    ): Boolean {
         var isUserAgentSection = false
         var foundUserAgent = false
 

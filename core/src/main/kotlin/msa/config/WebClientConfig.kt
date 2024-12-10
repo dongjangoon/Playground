@@ -10,17 +10,19 @@ import java.time.Duration
 
 @Configuration
 class WebClientConfig {
-
     @Value("\${llm.service.url}")
     private lateinit var llmServiceUrl: String
 
     @Bean
     fun webClient(): WebClient {
         return WebClient.builder()
-            .clientConnector(ReactorClientHttpConnector(HttpClient.create()
-                .responseTimeout(Duration.ofSeconds(30))
-                .followRedirect(true)
-            ))
+            .clientConnector(
+                ReactorClientHttpConnector(
+                    HttpClient.create()
+                        .responseTimeout(Duration.ofSeconds(30))
+                        .followRedirect(true),
+                ),
+            )
             .defaultHeader("User-Agent", "TechBlogCrawlerBot")
             .build()
     }
@@ -29,9 +31,12 @@ class WebClientConfig {
     fun llmClient(): WebClient {
         return WebClient.builder()
             .baseUrl(llmServiceUrl)
-            .clientConnector(ReactorClientHttpConnector(HttpClient.create()
-                .responseTimeout(Duration.ofSeconds(60))
-            ))
+            .clientConnector(
+                ReactorClientHttpConnector(
+                    HttpClient.create()
+                        .responseTimeout(Duration.ofSeconds(60)),
+                ),
+            )
             .defaultHeader("Content-Type", "application/json")
             .build()
     }

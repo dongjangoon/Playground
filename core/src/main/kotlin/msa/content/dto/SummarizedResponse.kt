@@ -4,5 +4,5 @@ class SummarizedResponse(
     val title: String,
     val content: String,
     val summary: String,
-    val tags: List<String>
+    val tags: List<String>,
 )

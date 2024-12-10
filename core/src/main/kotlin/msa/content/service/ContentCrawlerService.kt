@@ -24,10 +24,8 @@ class ContentCrawlerServiceImpl(
     private val webClient: WebClient,
     private val robotsValidator: RobotsValidator,
     private val postService: PostService,
-    private val llmClient: WebClient,
     private val crawledUrlRepository: CrawledUrlRepository,
-) : ContentCrawlerService{
-
+) : ContentCrawlerService {
     private val log = LoggerFactory.getLogger(javaClass)
 
     companion object {
@@ -47,42 +45,46 @@ class ContentCrawlerServiceImpl(
 
         // robots.txt 검사
         if (!robotsValidator.isAllowedToCrawl(
-            baseUrl = baseUrl,
-            path = path,
-            userAgent = USER_AGENT
-        )) {
+                baseUrl = baseUrl,
+                path = path,
+                userAgent = USER_AGENT,
+            )
+        ) {
             throw RobotsNotAllowedException
         }
 
         // HTML 컨텐츠 크롤링
-        val htmlContent = webClient.get()
-            .uri(sourceUrl.url)
-            .retrieve()
-            .awaitBody<String>()
+        val htmlContent =
+            webClient.get()
+                .uri(sourceUrl.url)
+                .retrieve()
+                .awaitBody<String>()
 
         // LLM 서비스를 통해 구조화된 데이터 받기
-        val parsedContent = llmClient.post()
-            .uri("/parse-and-summarize")
-            .bodyValue(SummarizedRequest(htmlContent))
-            .retrieve()
-            .awaitBody<SummarizedResponse>()
+        val parsedContent =
+            llmClient.post()
+                .uri("/parse-and-summarize")
+                .bodyValue(SummarizedRequest(htmlContent))
+                .retrieve()
+                .awaitBody<SummarizedResponse>()
 
         // Post 엔티티 생성 및 저장
-        val post = postService.createPost(
-            title = parsedContent.title,
-            content = parsedContent.content,
-            summary = parsedContent.summary,
-            category = sourceUrl.category,
-            authorId = "SYSTEM",
-            tags = parsedContent.tags,
-        )
+        val post =
+            postService.createPost(
+                title = parsedContent.title,
+                content = parsedContent.content,
+                summary = parsedContent.summary,
+                category = sourceUrl.category,
+                authorId = "SYSTEM",
+                tags = parsedContent.tags,
+            )
 
         // 크롤링한 URL 저장
         crawledUrlRepository.save(
             CrawledUrl.create(
                 url = sourceUrl.url,
-                postId = post.id!!
-            )
+                postId = post.id!!,
+            ),
         )
 
         return post

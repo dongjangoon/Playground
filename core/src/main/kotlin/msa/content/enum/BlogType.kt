@@ -5,7 +5,7 @@ enum class BlogType {
     NAVER_D2,
     LINE_ENGINEERING,
     WOOWA_TECH,
-    ETC
+    ETC,
     ;
 
     companion object {
