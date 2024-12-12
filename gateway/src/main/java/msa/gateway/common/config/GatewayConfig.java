@@ -1,6 +1,7 @@
 package msa.gateway.common.config;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import msa.gateway.filter.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Getter
+@Slf4j
 @Configuration
 public class GatewayConfig {
 
@@ -39,23 +41,39 @@ public class GatewayConfig {
         return builder.routes()
                 // /login 요청: User 서비스의 /api/v1/users/login으로 라우팅
                 .route("login-route", r -> r.path("/login")
-                        .filters(f -> f.rewritePath("/login", userServiceBasePath + "/login"))
+                        .filters(f -> f.rewritePath("/login", userServiceBasePath + "/login")
+                                .filter((exchange, chain) -> {
+                                    log.info("Received request for /login");
+                                    return chain.filter(exchange);
+                                }))
                         .uri(userServiceUri)) // User 서비스 URI로 전달
 
                 // /signup 요청: User 서비스의 /api/v1/users/signup으로 라우팅
                 .route("signup-route", r -> r.path("/signup")
-                        .filters(f -> f.rewritePath("/signup", userServiceBasePath + "/signup"))
+                        .filters(f -> f.rewritePath("/signup", userServiceBasePath + "/signup")
+                                .filter((exchange, chain) -> {
+                                    log.info("Received request for /signup");
+                                    return chain.filter(exchange);
+                                }))
                         .uri(userServiceUri)) // User 서비스 URI로 전달
 
                 // /api/** 요청: JWT 필터 적용 후 API 서비스로 전달
                 .route("api-route", r -> r.path("/api/**")
                         .filters(f -> f.filter(jwtAuthorizationFilter) // JWT 필터 적용
-                                .rewritePath("/api/(?<segment>.*)", "/${segment}")) // Path Rewrite
+                                .rewritePath("/api/(?<segment>.*)", "/${segment}")
+                                .filter((exchange, chain) -> {
+                                    log.info("Received request for /api/**");
+                                    return chain.filter(exchange);
+                                })) // Path Rewrite
                         .uri(apiServiceUri))
 
                 // /admin/** 요청: JWT 필터 적용 후 API 서비스로 전달
                 .route("admin-route", r -> r.path("/admin/**")
-                        .filters(f -> f.filter(jwtAuthorizationFilter)) // JWT 필터 적용
+                        .filters(f -> f.filter(jwtAuthorizationFilter)
+                                .filter((exchange, chain) -> {
+                                    log.info("Received request for /admin/**");
+                                    return chain.filter(exchange);
+                                })) // JWT 필터 적용
                         .uri(apiServiceUri))
 
                 .build();

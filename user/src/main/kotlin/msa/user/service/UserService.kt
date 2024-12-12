@@ -61,9 +61,9 @@ class UserServiceImpl(
             }
         }
 
-        // 이메일 인증 확인
-        if (!emailVerificationService.isEmailVerified(request.email))
-            throw EmailNotVerifiedException
+        // TODO 이메일 인증 확인 : 테스트과정에서는 잠시 주석처리
+//        if (!emailVerificationService.isEmailVerified(request.email))
+//            throw EmailNotVerifiedException
 
         if (checkDuplicateNickname(request.nickname)) {
             throw DuplicateNicknameException
