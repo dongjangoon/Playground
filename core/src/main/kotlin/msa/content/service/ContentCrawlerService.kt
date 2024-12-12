@@ -24,6 +24,7 @@ class ContentCrawlerServiceImpl(
     private val webClient: WebClient,
     private val robotsValidator: RobotsValidator,
     private val postService: PostService,
+    private val llmClient: WebClient,
     private val crawledUrlRepository: CrawledUrlRepository,
 ) : ContentCrawlerService {
     private val log = LoggerFactory.getLogger(javaClass)

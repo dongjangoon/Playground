@@ -80,7 +80,7 @@ class ContentCrawlerJobConfig(
 
             // 크롤링할 소스 URL들을 채널로 전송
             launch {
-                blogSourceProvider.getAllBlogSources().forEach { source ->
+                blogSourceProvider.getAllBlogResources().forEach { source ->
                     channel.send(source)
                 }
                 channel.close()

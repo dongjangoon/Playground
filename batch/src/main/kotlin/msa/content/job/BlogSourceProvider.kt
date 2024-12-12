@@ -28,5 +28,5 @@ class BlogSourceProvider(
                 }.toList()
         }
 
-    fun getAllBlogSources(): List<SourceUrl> = blogSources
+    fun getAllBlogResources(): List<SourceUrl> = blogSources
 }
