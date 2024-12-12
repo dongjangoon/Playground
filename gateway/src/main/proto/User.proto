@@ -1,11 +1,36 @@
 syntax = "proto3";
 
-package msa.user.model;
+package msa.user.service;  // 패키지를 service로 변경
 
 // 다른 proto 파일에서 정의된 Enum을 import
 import "UserRole.proto";
 import "UserStatus.proto";
 
+// gRPC 서비스 정의
+service UserService {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse); // GetUser 메서드 정의
+}
+
+// 요청 메시지 정의
+message GetUserRequest {
+  int64 id = 1;
+}
+
+// 응답 메시지 정의
+message GetUserResponse {
+  int64 id = 1;
+  string email = 2;
+  string nickname = 3;
+  string profileImage = 4;
+  common.UserRole role = 5;
+  common.UserStatus status = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+  bool deleted = 9;
+  string deletedAt = 10;
+}
+
+// 기존 User 메시지 정의
 message User {
   int64 id = 1;
   string email = 2;

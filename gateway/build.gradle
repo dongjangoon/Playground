@@ -50,7 +50,8 @@ dependencies {
     implementation 'io.grpc:grpc-stub:1.69.0'
 
     // Protobuf
-    implementation "com.google.protobuf:protobuf-java:3.21.12"
+    implementation 'com.google.protobuf:protobuf-java:4.28.2'
+    implementation 'com.google.protobuf:protobuf-java-util:4.28.2'
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -69,13 +70,19 @@ dependencyManagement {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.21.12" // Protoc 컴파일러 버전
+        artifact = "com.google.protobuf:protoc:4.28.2" // Protoc 컴파일러 버전
+    }
+    clean {
+        delete generatedFilesBaseDir
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.69.0"
+        }
     }
     generateProtoTasks {
-        all().each { task ->
-            task.builtins {
-                java { } // Java 코드 생성
-            }
+        all()*.plugins {
+            grpc{}
         }
     }
 }
