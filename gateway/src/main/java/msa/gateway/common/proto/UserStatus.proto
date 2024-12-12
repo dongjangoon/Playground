@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package common;
+
+enum UserStatus {
+  ACTIVE = 0;
+  INACTIVE = 1;
+  SUSPENDED = 2;
+  DELETED = 3;
+}

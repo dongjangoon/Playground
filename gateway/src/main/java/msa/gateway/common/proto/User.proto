@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package msa.user.model;
+
+// 다른 proto 파일에서 정의된 Enum을 import
+import "UserRole.proto";
+import "UserStatus.proto";
+
+message User {
+  int64 id = 1;
+  string email = 2;
+  string password = 3;
+  string nickname = 4;
+  string profileImage = 5;
+  common.UserRole role = 6;
+  common.UserStatus status = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+  bool deleted = 10;
+  string deletedAt = 11;
+}
