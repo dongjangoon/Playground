@@ -26,11 +26,13 @@ public class GatewayConfig {
 
     @Value("${user.service.base-path}")
     private String userServiceBasePath;
+
     /**
      * API 라우팅 설정
      * - /api/** 요청: JWT 필터 적용 후 API 서비스로 전달
      * - /admin/** 요청: JWT 필터 적용 후 API 서비스로 전달
      * - /login 요청: JWT 필터 우회 후 User 서비스로 전달
+     * - /signup 요청: JWT 필터 우회 후 User 서비스로 전달
      */
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
@@ -38,6 +40,11 @@ public class GatewayConfig {
                 // /login 요청: User 서비스의 /api/v1/users/login으로 라우팅
                 .route("login-route", r -> r.path("/login")
                         .filters(f -> f.rewritePath("/login", userServiceBasePath + "/login"))
+                        .uri(userServiceUri)) // User 서비스 URI로 전달
+
+                // /signup 요청: User 서비스의 /api/v1/users/signup으로 라우팅
+                .route("signup-route", r -> r.path("/signup")
+                        .filters(f -> f.rewritePath("/signup", userServiceBasePath + "/signup"))
                         .uri(userServiceUri)) // User 서비스 URI로 전달
 
                 // /api/** 요청: JWT 필터 적용 후 API 서비스로 전달

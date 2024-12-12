@@ -1,4 +1,4 @@
-package msa.gateway.config;
+package msa.gateway.routingTests;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
