@@ -13,12 +13,13 @@ data class CommentResponse(
     val updatedAt: LocalDateTime,
 )
 
-fun Comment.toResponse() = CommentResponse(
-    id = id!!,
-    postId = postId,
-    content = content,
-    authorId = authorId,
-    parentId = parentId,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-)
+fun Comment.toResponse() =
+    CommentResponse(
+        id = id!!,
+        postId = postId,
+        content = content,
+        authorId = authorId,
+        parentId = parentId,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+    )

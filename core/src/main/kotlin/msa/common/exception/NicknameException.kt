@@ -16,3 +16,9 @@ object NicknameAlreadyExistsException : NicknameException(ErrorType.NICKNAME_ALR
 object PostNotFoundException : NicknameException(ErrorType.POST_NOT_FOUND)
 
 object CommentNotFoundException : NicknameException(ErrorType.COMMENT_NOT_FOUND)
+
+object RobotsNotFoundException : NicknameException(ErrorType.ROBOTS_NOT_FOUND)
+
+object RobotsNotAllowedException : NicknameException(ErrorType.ROBOTS_NOT_ALLOWED)
+
+object UrlAlreadyCrawledException : NicknameException(ErrorType.URL_ALREADY_CRAWLED)

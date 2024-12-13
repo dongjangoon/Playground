@@ -4,6 +4,7 @@ enum class PostCategory {
     BACKEND,
     FRONTEND,
     AI,
+    DATA,
     DEVOPS,
     ARCHITECTURE,
     CAREER,

@@ -54,8 +54,8 @@ class CommentServiceImpl(
             commentRepository.save(
                 comment.copy(
                     content = content,
-                    updatedAt = LocalDateTime.now()
-                )
+                    updatedAt = LocalDateTime.now(),
+                ),
             )
         } ?: throw CommentNotFoundException
 
@@ -64,13 +64,12 @@ class CommentServiceImpl(
             commentRepository.save(
                 comment.copy(
                     deleted = true,
-                    updatedAt = LocalDateTime.now()
-                )
+                    updatedAt = LocalDateTime.now(),
+                ),
             )
         } ?: throw CommentNotFoundException
 
-    override suspend fun getComment(id: String): Comment =
-        commentRepository.findById(id) ?: throw CommentNotFoundException
+    override suspend fun getComment(id: String): Comment = commentRepository.findById(id) ?: throw CommentNotFoundException
 
     override suspend fun getCommentsByPost(postId: String): List<Comment> =
         commentRepository.findByPostIdAndDeletedFalseOrderByCreatedAtDesc(postId)

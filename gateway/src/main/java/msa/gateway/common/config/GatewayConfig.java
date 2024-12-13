@@ -57,9 +57,11 @@ public class GatewayConfig {
 
                 // /admin/** 요청: JWT 필터 적용 후 API 서비스로 전달
                 .route("admin-route", r -> r.path("/admin/**")
-                        .filters(f -> f.filter(jwtAuthorizationFilter))
+                        .filters(f -> f.filter(jwtAuthorizationFilter)) // JWT 필터만 추가
                         .uri(apiServiceUri))
-
+                // /error-test 경로 (테스트용)
+                .route("error-test-route", r -> r.path("/error-test")
+                        .uri("http://localhost:8888")) // Gateway 모듈 내부에서 실행
                 .build();
     }
 }

@@ -17,4 +17,8 @@ enum class ErrorType(
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, 0x2001, "해당 게시글이 존재하지 않습니다."),
 
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, 0x3001, "해당 댓글이 존재하지 않습니다."),
+
+    ROBOTS_NOT_FOUND(HttpStatus.NOT_FOUND, 0x4001, "robots.txt가 존재하지 않습니다."),
+    ROBOTS_NOT_ALLOWED(HttpStatus.FORBIDDEN, 0x4002, "robots.txt에 의해 크롤링이 금지되었습니다."),
+    URL_ALREADY_CRAWLED(HttpStatus.BAD_REQUEST, 0x4003, "이미 크롤링한 URL입니다."),
 }

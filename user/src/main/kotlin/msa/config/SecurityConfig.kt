@@ -29,7 +29,8 @@ class SecurityConfig(
                 it.requestMatchers(
                     "/api/v1/users/signup",
                     "/api/v1/users/login",
-                    "/api/v1/users/send-verification-email").permitAll()
+                    "/api/v1/users/send-verification-email",
+                    "/api/v1/users/verify-email").permitAll()
                 it.anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
