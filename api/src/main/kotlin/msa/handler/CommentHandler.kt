@@ -15,12 +15,13 @@ class CommentHandler(
 ) {
     suspend fun createComment(request: ServerRequest): ServerResponse {
         val body = request.awaitBody<CreateCommentRequest>()
-        val comment = commentService.createComment(
-            postId = body.postId,
-            content = body.content,
-            authorId = body.authorId,
-            parentId = body.parentId,
-        )
+        val comment =
+            commentService.createComment(
+                postId = body.postId,
+                content = body.content,
+                authorId = body.authorId,
+                parentId = body.parentId,
+            )
         return ServerResponse.ok()
             .bodyValueAndAwait(comment.toResponse())
     }
@@ -28,10 +29,11 @@ class CommentHandler(
     suspend fun updateComment(request: ServerRequest): ServerResponse {
         val id = request.pathVariable("id")
         val body = request.awaitBody<CreateCommentRequest>()
-        val comment = commentService.updateComment(
-            id = id,
-            content = body.content,
-        )
+        val comment =
+            commentService.updateComment(
+                id = id,
+                content = body.content,
+            )
         return ServerResponse.ok()
             .bodyValueAndAwait(comment.toResponse())
     }

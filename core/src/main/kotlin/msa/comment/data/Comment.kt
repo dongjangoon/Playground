@@ -9,18 +9,17 @@ import java.time.LocalDateTime
 data class Comment(
     @Id
     val id: String? = null,
-
     @Indexed
     val postId: String,
-
     @Indexed
     val authorId: String,
-
-    val parentId: String? = null,   // 대댓글을 위한 부모 댓글 ID
+    // 대댓글을 위한 부모 댓글 ID
+    val parentId: String? = null,
     val content: String,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now(),
-    val deleted: Boolean = false,   // Soft delete
+    // Soft delete
+    val deleted: Boolean = false,
 ) {
     companion object {
         fun create(
