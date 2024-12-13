@@ -24,13 +24,11 @@ public class GlobalExceptionHandler implements org.springframework.boot.web.reac
 
         ErrorResponse errorResponse;
 
-        if (ex instanceof JwtAuthorizationException) {
-            JwtAuthorizationException jwtException = (JwtAuthorizationException) ex;
+        if (ex instanceof JwtAuthorizationException jwtException) {
             ErrorCode errorCode = jwtException.getErrorCode();
             exchange.getResponse().setStatusCode(HttpStatus.valueOf(errorCode.getStatus()));
             errorResponse = new ErrorResponse(jwtException.getMessage(), errorCode.getStatus(), errorCode.getCode());
-        } else if (ex instanceof BusinessException) {
-            BusinessException businessException = (BusinessException) ex;
+        } else if (ex instanceof BusinessException businessException) {
             ErrorCode errorCode = businessException.getErrorCode();
             exchange.getResponse().setStatusCode(HttpStatus.valueOf(errorCode.getStatus()));
             errorResponse = new ErrorResponse(businessException.getMessage(), errorCode.getStatus(), errorCode.getCode());

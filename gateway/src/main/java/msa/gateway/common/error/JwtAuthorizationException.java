@@ -1,5 +1,8 @@
 package msa.gateway.common.error;
 
+import lombok.Getter;
+
+@Getter
 public class JwtAuthorizationException extends RuntimeException {
     private final ErrorCode errorCode;
 
@@ -8,7 +11,4 @@ public class JwtAuthorizationException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public ErrorCode getErrorCode() {
-        return errorCode;
-    }
 }

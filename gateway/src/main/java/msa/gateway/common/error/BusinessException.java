@@ -1,5 +1,8 @@
 package msa.gateway.common.error;
 
+import lombok.Getter;
+
+@Getter
 public class BusinessException extends RuntimeException {
     private final ErrorCode errorCode;
 
@@ -8,8 +11,5 @@ public class BusinessException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public ErrorCode getErrorCode() {
-        return errorCode;
-    }
 }
 
