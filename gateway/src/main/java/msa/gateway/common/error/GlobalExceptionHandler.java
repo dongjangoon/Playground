@@ -2,6 +2,7 @@ package msa.gateway.common.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -22,13 +23,19 @@ public class GlobalExceptionHandler implements org.springframework.boot.web.reac
         exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
         ErrorResponse errorResponse;
-        if (ex instanceof BusinessException) {
+
+        if (ex instanceof JwtAuthorizationException) {
+            JwtAuthorizationException jwtException = (JwtAuthorizationException) ex;
+            ErrorCode errorCode = jwtException.getErrorCode();
+            exchange.getResponse().setStatusCode(HttpStatus.valueOf(errorCode.getStatus()));
+            errorResponse = new ErrorResponse(jwtException.getMessage(), errorCode.getStatus(), errorCode.getCode());
+        } else if (ex instanceof BusinessException) {
             BusinessException businessException = (BusinessException) ex;
             ErrorCode errorCode = businessException.getErrorCode();
-            exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.valueOf(errorCode.getStatus()));
+            exchange.getResponse().setStatusCode(HttpStatus.valueOf(errorCode.getStatus()));
             errorResponse = new ErrorResponse(businessException.getMessage(), errorCode.getStatus(), errorCode.getCode());
         } else {
-            exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
             errorResponse = new ErrorResponse("Unexpected error occurred", 500, "C999");
         }
 
@@ -43,5 +50,6 @@ public class GlobalExceptionHandler implements org.springframework.boot.web.reac
                 .bufferFactory()
                 .wrap(responseBytes)));
     }
+
 }
 

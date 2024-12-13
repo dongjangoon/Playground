@@ -3,6 +3,8 @@ package msa.gateway.filter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import msa.gateway.common.error.ErrorCode;
+import msa.gateway.common.error.JwtAuthorizationException;
 import msa.gateway.common.utils.JwtUtil;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -17,6 +19,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 @Component
 public class JwtAuthorizationFilter implements GatewayFilter {
 
@@ -33,7 +36,7 @@ public class JwtAuthorizationFilter implements GatewayFilter {
         String authHeader = headers.getFirst(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return onError(exchange, "Missing or invalid Authorization header", HttpStatus.UNAUTHORIZED);
+            throw new JwtAuthorizationException("Missing or invalid Authorization header", ErrorCode.UNAUTHORIZED);
         }
 
         String token = authHeader.substring(7); // "Bearer " 제거
@@ -51,10 +54,10 @@ public class JwtAuthorizationFilter implements GatewayFilter {
             String userEmail = claims.get("email", String.class);
             String role = claims.get("role", String.class);
 
-            // ADMIN 검증 (ADMIN 경로에만 필요)
+            // ADMIN 검증
             if (exchange.getRequest().getPath().toString().startsWith("/admin")) {
                 if (!"ADMIN".equals(role)) {
-                    return onError(exchange, "Forbidden: Admin access only", HttpStatus.FORBIDDEN);
+                    throw new JwtAuthorizationException("Forbidden: Admin access only", ErrorCode.FORBIDDEN);
                 }
             }
 
@@ -69,15 +72,7 @@ public class JwtAuthorizationFilter implements GatewayFilter {
             return chain.filter(exchange);
 
         } catch (Exception e) {
-            return onError(exchange, "Invalid or expired token", HttpStatus.UNAUTHORIZED);
+            throw new JwtAuthorizationException("Invalid or expired token", ErrorCode.UNAUTHORIZED);
         }
-    }
-
-    private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
-        exchange.getResponse().setStatusCode(httpStatus);
-        DataBuffer buffer = exchange.getResponse()
-                .bufferFactory()
-                .wrap(err.getBytes(StandardCharsets.UTF_8));
-        return exchange.getResponse().writeWith(Mono.just(buffer));
     }
 }
