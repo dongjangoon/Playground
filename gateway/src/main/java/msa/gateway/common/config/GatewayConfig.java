@@ -8,6 +8,8 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Value;
 
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+
 @Getter
 @Configuration
 public class GatewayConfig {
@@ -17,9 +19,6 @@ public class GatewayConfig {
     public GatewayConfig(JwtAuthorizationFilter jwtAuthorizationFilter) {
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
     }
-
-    @Value("${test.api.path}")
-    private String apiPath;
 
     /**
      * API 라우팅
@@ -38,7 +37,10 @@ public class GatewayConfig {
                 .route("admin-route", r -> r.path("/admin/**")
                         .filters(f -> f.filter(jwtAuthorizationFilter)) // JWT 필터만 추가
                         .uri("http://localhost:8080"))
-                .build();
+                // /error-test 경로 (테스트용)
+                .route("error-test-route", r -> r.path("/error-test")
+                        .uri("http://localhost:8888")) // Gateway 모듈 내부에서 실행
+                        .build();
     }
 
 }
