@@ -23,31 +23,37 @@ public class GlobalExceptionHandler implements org.springframework.boot.web.reac
         exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
         ErrorResponse errorResponse;
+        HttpStatus status;
 
-        if (ex instanceof JwtAuthorizationException jwtException) {
-            ErrorCode errorCode = jwtException.getErrorCode();
-            exchange.getResponse().setStatusCode(HttpStatus.valueOf(errorCode.getStatus()));
-            errorResponse = new ErrorResponse(jwtException.getMessage(), errorCode.getStatus(), errorCode.getCode());
-        } else if (ex instanceof BusinessException businessException) {
-            ErrorCode errorCode = businessException.getErrorCode();
-            exchange.getResponse().setStatusCode(HttpStatus.valueOf(errorCode.getStatus()));
-            errorResponse = new ErrorResponse(businessException.getMessage(), errorCode.getStatus(), errorCode.getCode());
+        if (ex instanceof CustomException customException) {
+            errorResponse = handleCustomException(customException);
+            status = HttpStatus.valueOf(customException.getErrorCode().getStatus());
         } else {
-            exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
             errorResponse = new ErrorResponse("Unexpected error occurred", 500, "C999");
         }
 
-        byte[] responseBytes;
-        try {
-            responseBytes = objectMapper.writeValueAsBytes(errorResponse);
-        } catch (Exception e) {
-            responseBytes = "{\"message\":\"Internal serialization error\",\"status\":500,\"code\":\"C998\"}".getBytes();
-        }
+        exchange.getResponse().setStatusCode(status);
+
+        byte[] responseBytes = serializeErrorResponse(errorResponse);
 
         return exchange.getResponse().writeWith(Mono.just(exchange.getResponse()
                 .bufferFactory()
                 .wrap(responseBytes)));
     }
 
-}
+    private ErrorResponse handleCustomException(CustomException customException) {
+        ErrorCode errorCode = customException.getErrorCode();
 
+        return new ErrorResponse(customException.getMessage(), errorCode.getStatus(), errorCode.getCode());
+    }
+
+    private byte[] serializeErrorResponse(ErrorResponse errorResponse) {
+        try {
+            return objectMapper.writeValueAsBytes(errorResponse);
+        } catch (Exception e) {
+            String fallbackError = "{\"message\":\"Internal serialization error\",\"status\":500,\"code\":\"C998\"}";
+            return fallbackError.getBytes();
+        }
+    }
+}

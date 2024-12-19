@@ -3,14 +3,12 @@ package msa.gateway.filter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import msa.gateway.common.error.CustomException;
 import msa.gateway.common.error.ErrorCode;
-import msa.gateway.common.error.JwtAuthorizationException;
 import msa.gateway.common.utils.JwtUtil;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -36,7 +34,7 @@ public class JwtAuthorizationFilter implements GatewayFilter {
         String authHeader = headers.getFirst(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new JwtAuthorizationException("Missing or invalid Authorization header", ErrorCode.UNAUTHORIZED);
+            throw new CustomException("Missing or invalid Authorization header", ErrorCode.UNAUTHORIZED);
         }
 
         String token = authHeader.substring(7); // "Bearer " 제거
@@ -57,7 +55,7 @@ public class JwtAuthorizationFilter implements GatewayFilter {
             // ADMIN 검증
             if (exchange.getRequest().getPath().toString().startsWith("/admin")) {
                 if (!"ADMIN".equals(role)) {
-                    throw new JwtAuthorizationException("Forbidden: Admin access only", ErrorCode.FORBIDDEN);
+                    throw new CustomException("Forbidden: Admin access only", ErrorCode.FORBIDDEN);
                 }
             }
 
@@ -72,7 +70,7 @@ public class JwtAuthorizationFilter implements GatewayFilter {
             return chain.filter(exchange);
 
         } catch (Exception e) {
-            throw new JwtAuthorizationException("Invalid or expired token", ErrorCode.UNAUTHORIZED);
+            throw new CustomException("Invalid or expired token", ErrorCode.UNAUTHORIZED);
         }
     }
 }
