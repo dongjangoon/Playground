@@ -25,21 +25,8 @@ public class GlobalExceptionHandler implements org.springframework.boot.web.reac
     private Mono<Void> handleError(ServerWebExchange exchange, CustomException customException) {
         ErrorResponse errorResponse;
 
-        if (customException != null) {
-            // CustomException 기반 에러 응답 생성
-            errorResponse = new ErrorResponse(
-                    customException.getMessage(),
-                    customException.getErrorType().getHttpStatus(),
-                    customException.getErrorType().getErrorMessage()
-            );
-        } else {
-            // 일반 에러 응답 생성
-            errorResponse = new ErrorResponse(
-                    ErrorType.INTERNAL_SERVER_ERROR.getErrorMessage(),
-                    ErrorType.INTERNAL_SERVER_ERROR.getHttpStatus(),
-                    String.format("E%04d", ErrorType.INTERNAL_SERVER_ERROR.getErrorCode())
-            );
-        }
+        if (customException != null) errorResponse = new ErrorResponse(customException);
+        else errorResponse = ErrorResponse.notCustomError();
 
         return errorResponse.writeToExchange(exchange, objectMapper);
     }

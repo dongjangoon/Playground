@@ -15,6 +15,21 @@ public class ErrorResponse {
     private HttpStatus status;
     private String code;
 
+    public ErrorResponse(CustomException customException) {
+        this.message = customException.getMessage();
+        this.status = customException.getErrorType().getHttpStatus();
+        this.code = customException.getErrorType().getErrorMessage();
+    }
+
+    public static ErrorResponse notCustomError() {
+        return new ErrorResponse(
+                ErrorType.INTERNAL_SERVER_ERROR.getErrorMessage(),
+                ErrorType.INTERNAL_SERVER_ERROR.getHttpStatus(),
+                String.format("E%04d", ErrorType.INTERNAL_SERVER_ERROR.getErrorCode())
+        );
+    }
+
+
     public Mono<Void> writeToExchange(ServerWebExchange exchange, ObjectMapper objectMapper) {
         return Mono.fromCallable(() -> objectMapper.writeValueAsBytes(this)) // 현재 ErrorResponse 객체를 JSON으로 직렬화
                 .flatMap(responseBytes -> {
