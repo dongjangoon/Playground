@@ -50,14 +50,6 @@ class GatewayConfigTest {
                     String responseBody = new String(response.getResponseBody(), StandardCharsets.UTF_8); // 응답 본문 디코딩
                     System.out.println("Full Response Body: " + responseBody); // 전체 응답 출력
                 });
-//                .jsonPath("$.id").exists() // ID가 반환되는지 확인
-//                .jsonPath("$.postId").isEqualTo("12345")
-//                .jsonPath("$.content").isEqualTo("This is a sample comment") // JSON 필드 검증
-//                .jsonPath("$.authorId").isEqualTo("user-6789")
-//                .jsonPath("$.parentId").isEmpty()
-//                .jsonPath("$.createdAt").exists() // 생성 시간 확인
-//                .jsonPath("$.updatedAt").exists(); // 업데이트 시간 확인
-
     }
 
 

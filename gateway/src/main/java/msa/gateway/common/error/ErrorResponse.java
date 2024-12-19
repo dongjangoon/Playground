@@ -29,7 +29,6 @@ public class ErrorResponse {
         );
     }
 
-
     public Mono<Void> writeToExchange(ServerWebExchange exchange, ObjectMapper objectMapper) {
         return Mono.fromCallable(() -> objectMapper.writeValueAsBytes(this)) // 현재 ErrorResponse 객체를 JSON으로 직렬화
                 .flatMap(responseBytes -> {
