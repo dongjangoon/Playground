@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import msa.gateway.common.error.CustomException;
-import msa.gateway.common.error.ErrorCode;
+import msa.gateway.common.error.ErrorType;
 import msa.gateway.common.utils.JwtUtil;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -34,7 +34,7 @@ public class JwtAuthorizationFilter implements GatewayFilter {
         String authHeader = headers.getFirst(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new CustomException("Missing or invalid Authorization header", ErrorCode.UNAUTHORIZED);
+            throw new CustomException(ErrorType.UNAUTHORIZED);
         }
 
         String token = authHeader.substring(7); // "Bearer " 제거
@@ -55,7 +55,7 @@ public class JwtAuthorizationFilter implements GatewayFilter {
             // ADMIN 검증
             if (exchange.getRequest().getPath().toString().startsWith("/admin")) {
                 if (!"ADMIN".equals(role)) {
-                    throw new CustomException("Forbidden: Admin access only", ErrorCode.FORBIDDEN);
+                    throw new CustomException(ErrorType.FORBIDDEN);
                 }
             }
 
@@ -70,7 +70,7 @@ public class JwtAuthorizationFilter implements GatewayFilter {
             return chain.filter(exchange);
 
         } catch (Exception e) {
-            throw new CustomException("Invalid or expired token", ErrorCode.UNAUTHORIZED);
+            throw new CustomException(ErrorType.UNAUTHORIZED);
         }
     }
 }

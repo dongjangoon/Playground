@@ -1,37 +1,32 @@
 package msa.gateway.common.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNullApi;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
+@AllArgsConstructor
 @Order(-2) // 높은 우선순위로 설정
+
 public class GlobalExceptionHandler implements org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler {
 
     private final ObjectMapper objectMapper;
-
-    public GlobalExceptionHandler(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
 
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
         exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        ErrorResponse errorResponse;
-        HttpStatus status;
-
-        if (ex instanceof CustomException customException) {
-            errorResponse = handleCustomException(customException);
-            status = HttpStatus.valueOf(customException.getErrorCode().getStatus());
-        } else {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-            errorResponse = new ErrorResponse("Unexpected error occurred", 500, "C999");
-        }
+        CustomException customException = (CustomException) ex;
+        ErrorResponse errorResponse = handleCustomException(customException);
+        HttpStatus status = customException.getErrorType().getHttpStatus();
 
         exchange.getResponse().setStatusCode(status);
 
@@ -43,9 +38,9 @@ public class GlobalExceptionHandler implements org.springframework.boot.web.reac
     }
 
     private ErrorResponse handleCustomException(CustomException customException) {
-        ErrorCode errorCode = customException.getErrorCode();
+        ErrorType errorType = customException.getErrorType();
 
-        return new ErrorResponse(customException.getMessage(), errorCode.getStatus(), errorCode.getCode());
+        return new ErrorResponse(customException.getMessage(), errorType.getHttpStatus(), errorType.getErrorMessage());
     }
 
     private byte[] serializeErrorResponse(ErrorResponse errorResponse) {

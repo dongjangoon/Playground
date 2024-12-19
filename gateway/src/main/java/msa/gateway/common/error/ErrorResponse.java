@@ -1,16 +1,13 @@
 package msa.gateway.common.error;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 
 @Data
+@AllArgsConstructor
 public class ErrorResponse {
     private String message;
-    private int status;
+    private HttpStatus status;
     private String code;
-
-    public ErrorResponse(String message, int status, String code) {
-        this.message = message;
-        this.status = status;
-        this.code = code;
-    }
 }
