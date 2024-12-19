@@ -6,17 +6,12 @@ import msa.gateway.common.error.ErrorType;
 import msa.gateway.common.jwt.JwtTokenProvider;
 import msa.gateway.common.jwt.JwtTokenValidator;
 import msa.gateway.common.jwt.JwtUtil;
-import msa.gateway.common.jwt.JwtExchangeGenerator;
+import msa.gateway.common.jwt.JwtUserInfoExtractor;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
-import io.jsonwebtoken.Claims;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 @AllArgsConstructor
@@ -33,10 +28,12 @@ public class JwtAuthorizationFilter implements GatewayFilter {
                 // 2. JWT 검증 및 Claims 추출
                 .map(token -> JwtTokenValidator.VALIDATE_TOKEN.apply(token, jwtUtil.getSecretKey()))
 
-                // 3. 유저 정보 확인 및 요청 헤더 생성
-                .flatMap(claims -> JwtExchangeGenerator.GENERATOR.apply(claims, exchange))
+                // 3. 유저 정보 추출 (추후에 유저정보를 사용하기 위함)
+                .flatMap(JwtUserInfoExtractor.EXTRACTOR)
 
-                .flatMap(chain::filter)
+                // 현재는 토큰 유효성 검사만 이루어지며 실제 필터링 로직은 이곳에 위치할 예정 (ex. ADMIN 검증 등)
+
+                .flatMap(claims -> chain.filter(exchange))
                 .onErrorResume(e -> Mono.error(new CustomException(ErrorType.UNAUTHORIZED)));
     }
 }
