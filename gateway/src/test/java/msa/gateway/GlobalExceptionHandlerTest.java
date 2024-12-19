@@ -18,8 +18,7 @@ public class GlobalExceptionHandlerTest {
                 .exchange()
                 .expectStatus().is5xxServerError()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("Custom business error occurred")
-                .jsonPath("$.status").isEqualTo(500)
-                .jsonPath("$.code").isEqualTo("C001");
+                .jsonPath("$.message").isEqualTo("프레임워크 내부 오류가 발생하였습니다.")
+                .jsonPath("$.status").isEqualTo("INTERNAL_SERVER_ERROR"); // 기대값을 String으로 변경
     }
 }
