@@ -15,6 +15,6 @@ public class JwtTokenProvider {
         return Optional.ofNullable(authHeader)
                 .filter(header -> header.startsWith("Bearer "))
                 .map(header -> header.substring(7)) // "Bearer " 이후의 토큰만 추출
-                .orElseThrow(() -> new CustomException(ErrorType.UNAUTHORIZED));
+                .orElseThrow(() -> new CustomException(ErrorType.JWT_INVALID));
     };
 }

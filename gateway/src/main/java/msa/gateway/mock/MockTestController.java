@@ -12,7 +12,7 @@ public class MockTestController {
 
     @GetMapping("/error-test")
     public String throwBusinessException() {
-        throw new CustomException(ErrorType.FRAMEWORK_INTERNAL_ERROR);
+        throw new CustomException(ErrorType.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("/jwt-test")

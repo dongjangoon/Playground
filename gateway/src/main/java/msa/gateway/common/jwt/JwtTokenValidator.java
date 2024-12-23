@@ -24,5 +24,5 @@ public class JwtTokenValidator {
                                 .parseClaimsJws(token)
                                 .getBody();
                     })
-                    .orElseThrow(() -> new CustomException(ErrorType.UNAUTHORIZED));
+                    .orElseThrow(() -> new CustomException(ErrorType.JWT_INVALID));
 }

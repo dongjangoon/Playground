@@ -34,6 +34,6 @@ public class JwtAuthorizationFilter implements GatewayFilter {
                 // 현재는 토큰 유효성 검사만 이루어지며 실제 필터링 로직은 이곳에 위치할 예정 (ex. ADMIN 검증 등)
 
                 .flatMap(claims -> chain.filter(exchange))
-                .onErrorResume(e -> Mono.error(new CustomException(ErrorType.UNAUTHORIZED)));
+                .onErrorResume(e -> Mono.error(new CustomException(ErrorType.JWT_INVALID)));
     }
 }
