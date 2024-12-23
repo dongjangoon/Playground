@@ -2,6 +2,7 @@ package msa.gateway.common.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import msa.gateway.filter.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Configuration
 public class GatewayConfig {
 
