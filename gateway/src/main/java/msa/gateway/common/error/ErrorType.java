@@ -2,9 +2,10 @@ package msa.gateway.common.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public enum ErrorType {
 

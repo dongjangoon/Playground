@@ -9,11 +9,16 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Data
-@AllArgsConstructor
 public class ErrorResponse {
     private String message;
     private HttpStatus status;
     private String code;
+
+    public ErrorResponse(String message, HttpStatus status, String code) {
+        this.message = message;
+        this.status = status;
+        this.code = code;
+    }
 
     public ErrorResponse(CustomException customException) {
         this.message = customException.getMessage();
