@@ -1,78 +1,39 @@
 package msa.gateway.filter;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import msa.gateway.common.error.ErrorCode;
-import msa.gateway.common.error.JwtAuthorizationException;
-import msa.gateway.common.utils.JwtUtil;
+import lombok.AllArgsConstructor;
+import msa.gateway.common.error.CustomException;
+import msa.gateway.common.error.ErrorType;
+import msa.gateway.common.jwt.JwtTokenProvider;
+import msa.gateway.common.jwt.JwtTokenValidator;
+import msa.gateway.common.jwt.JwtUtil;
+import msa.gateway.common.jwt.JwtUserInfoExtractor;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 @Component
+@AllArgsConstructor
 public class JwtAuthorizationFilter implements GatewayFilter {
 
     private final JwtUtil jwtUtil;
 
-    @Autowired
-    public JwtAuthorizationFilter(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
-
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        HttpHeaders headers = exchange.getRequest().getHeaders();
-        String authHeader = headers.getFirst(HttpHeaders.AUTHORIZATION);
+        return Mono.just(exchange)
+                // 1. 헤더에서 토큰 추출
+                .map(ex -> JwtTokenProvider.TOKEN_EXTRACTOR.apply(ex.getRequest().getHeaders()))
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new JwtAuthorizationException("Missing or invalid Authorization header", ErrorCode.UNAUTHORIZED);
-        }
+                // 2. JWT 검증 및 Claims 추출
+                .map(token -> JwtTokenValidator.VALIDATE_TOKEN.apply(token, jwtUtil.getSecretKey()))
 
-        String token = authHeader.substring(7); // "Bearer " 제거
+                // 3. 유저 정보 추출 (추후에 유저정보를 사용하기 위함)
+                .flatMap(JwtUserInfoExtractor.EXTRACTOR)
 
-        try {
-            // JWT 검증
-            SecretKey key = Keys.hmacShaKeyFor(jwtUtil.getSecretKey().getBytes(StandardCharsets.UTF_8));
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                // 현재는 토큰 유효성 검사만 이루어지며 실제 필터링 로직은 이곳에 위치할 예정 (ex. ADMIN 검증 등)
 
-            // 유저 정보 추출
-            String userEmail = claims.get("email", String.class);
-            String role = claims.get("role", String.class);
-
-            // ADMIN 검증
-            if (exchange.getRequest().getPath().toString().startsWith("/admin")) {
-                if (!"ADMIN".equals(role)) {
-                    throw new JwtAuthorizationException("Forbidden: Admin access only", ErrorCode.FORBIDDEN);
-                }
-            }
-
-            // 유저 정보를 요청 헤더에 추가
-            exchange = exchange.mutate()
-                    .request(exchange.getRequest().mutate()
-                            .header("X-User-Email", userEmail)
-                            .header("X-User-Role", role)
-                            .build())
-                    .build();
-
-            return chain.filter(exchange);
-
-        } catch (Exception e) {
-            throw new JwtAuthorizationException("Invalid or expired token", ErrorCode.UNAUTHORIZED);
-        }
+                .flatMap(claims -> chain.filter(exchange))
+                .onErrorResume(e -> Mono.error(new CustomException(ErrorType.JWT_INVALID)));
     }
 }

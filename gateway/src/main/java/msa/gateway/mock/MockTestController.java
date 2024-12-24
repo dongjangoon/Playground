@@ -1,15 +1,23 @@
 package msa.gateway.mock;
 
-import msa.gateway.common.error.BusinessException;
-import msa.gateway.common.error.ErrorCode;
+import msa.gateway.common.error.CustomException;
+import msa.gateway.common.error.ErrorType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/test")
 public class MockTestController {
 
     @GetMapping("/error-test")
     public String throwBusinessException() {
-        throw new BusinessException("Custom business error occurred", ErrorCode.FRAMEWORK_INTERNAL_ERROR);
+        throw new CustomException(ErrorType.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/jwt-test")
+    public String jwtTester() {
+        return "JWT 토큰이 유효합니다.";
     }
 }
+
