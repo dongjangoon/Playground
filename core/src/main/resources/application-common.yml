@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: classpath:application-info.yml
   profiles:
     active: local
   data:
