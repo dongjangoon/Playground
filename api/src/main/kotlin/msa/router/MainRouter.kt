@@ -43,9 +43,9 @@ class MainRouter(
                 POST("", postHandler::createPost)
                 PUT("/{id}", postHandler::updatePost)
                 PATCH("/{id}/publish", postHandler::publishPost)
+                PATCH("/{id}/recommend", postHandler::recommendPost)
                 GET("/{id}", postHandler::getPost)
-                GET("", postHandler::getPosts)
-                GET("/author/{authorId}", postHandler::getPostsByAuthor)
+                GET("", postHandler::getPostsWithCursor)
             }
         }
 

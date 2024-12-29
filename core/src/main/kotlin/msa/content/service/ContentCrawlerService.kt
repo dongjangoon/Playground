@@ -8,6 +8,7 @@ import msa.content.dto.SummarizedRequest
 import msa.content.dto.SummarizedResponse
 import msa.content.repository.CrawledUrlRepository
 import msa.post.data.Post
+import msa.post.dto.CreatePostRequest
 import msa.post.service.PostService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -72,12 +73,15 @@ class ContentCrawlerServiceImpl(
         // Post 엔티티 생성 및 저장
         val post =
             postService.createPost(
-                title = parsedContent.title,
-                content = parsedContent.content,
-                summary = parsedContent.summary,
-                category = sourceUrl.category,
-                authorId = "SYSTEM",
-                tags = parsedContent.tags,
+                CreatePostRequest(
+                    title = parsedContent.title,
+                    sourceUrl = sourceUrl.url,
+                    content = parsedContent.content,
+                    summary = parsedContent.summary,
+                    category = sourceUrl.category,
+                    authorId = "SYSTEM",
+                    tags = parsedContent.tags,
+                ),
             )
 
         // 크롤링한 URL 저장
