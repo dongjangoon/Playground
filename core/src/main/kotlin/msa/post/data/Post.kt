@@ -13,18 +13,22 @@ data class Post(
     val id: String? = null,
     @Indexed
     val title: String,
+    val sourceUrl: String,
     val content: String,
     val summary: String,
     val category: PostCategory,
     val authorId: String,
     val tags: List<String>,
     val status: PostStatus,
+    val viewCount: Long = 0,
+    val recommendCount: Long = 0,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
 ) {
     companion object {
         fun create(
             title: String,
+            sourceUrl: String,
             content: String,
             summary: String,
             category: PostCategory,
@@ -32,12 +36,15 @@ data class Post(
             tags: List<String>,
         ) = Post(
             title = title,
+            sourceUrl = sourceUrl,
             content = content,
             summary = summary,
             category = category,
             authorId = authorId,
             tags = tags,
             status = PostStatus.DRAFT,
+            viewCount = 0,
+            recommendCount = 0,
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now(),
         )
