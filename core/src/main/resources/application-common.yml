@@ -6,3 +6,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/nickname_db
+    redis:
+      repositories:
+        enabled: false
+      host: localhost
